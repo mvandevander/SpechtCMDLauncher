@@ -1,5 +1,4 @@
 // Launch.cpp is a command line utilitiy for launching programings without a .bat
-
 #include <cstdio>
 #include <cstring>
 #include <stdlib.h>
@@ -14,7 +13,7 @@ struct AppPathPair
 	char *path;
 };
 
-// TODO: Dynamicly store these so we don't have a hard limit
+// TODO: Dynamicly store these so we don't have a hard limit and so we don't have to many
 global_variable AppPathPair ParsingApps[100] = {};
 
 internal AppPathPair	// TODO: Stop Hacking void* and actually do this properly
@@ -68,9 +67,9 @@ CLConfigParser(char *configFile)
 }
 
 internal void
-CLArgsParser(char *args[], int validAppCount)
+CLArgsParser(char *arg, int validAppCount)
 {
-	if(args[1] == "-h" || args[1] == "--help" || args[1] == "/?")
+	if(arg == "-h" || arg == "--help" || arg == "/?")
 	{
 		//TODO: Actually print some help for the end user
 	}
@@ -78,7 +77,7 @@ CLArgsParser(char *args[], int validAppCount)
 	{
 		for(int i = 0; i <= validAppCount; i++)
 		{
-			if(args[1] == ParsingApps[i].application)
+			if(arg == ParsingApps[i].application)
 			{
 				printf("I FOUND A MATCH TO THE PASSED ARGUMENT IN THE CONFIG FILE");
 				system(ParsingApps[i].path);
@@ -94,7 +93,8 @@ main(int argc, char *argv[])
 	int validApplicationCount = CLConfigParser("config.cfg");
 	if(validApplicationCount > 0)
 	{
-		CLArgsParser(argv, validApplicationCount);
+        char *cmdArg = argv[1];
+		CLArgsParser(cmdArg, validApplicationCount);
 	}
 
 	return 0;

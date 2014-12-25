@@ -22,7 +22,9 @@ SplitLineToAppPathPair(char *str, char *delim = "=")
 {
     AppPathPair curProccessingApp = {};
     char *saveptr; //just a place to save the rest of the line after the delim
-    char *token = strtok_s((char *)&str, delim, &saveptr);
+
+    char *tempStr = str;
+    char *token = strtok_s(tempStr, delim, &saveptr);
 
     //TODO: Make this less janky
     // This also assumes there is only 2 parts a application name and a application path
@@ -30,7 +32,7 @@ SplitLineToAppPathPair(char *str, char *delim = "=")
     {
         curProccessingApp.application = token;
 
-        token = strtok_s((char*)&str, delim, &saveptr);
+        token = strtok_s(NULL, delim, &saveptr);
         if(token)
         {
             curProccessingApp.path = token;
@@ -40,7 +42,6 @@ SplitLineToAppPathPair(char *str, char *delim = "=")
     {
         printf_s("Invalid Token: %s", token);
     }
-
     return curProccessingApp;
 }
 
@@ -58,17 +59,17 @@ CLConfigParser(char *configFile)
     if (cfg)
     {
         // TODO: Make this dynamic, and less complex
-        while(!fscanf_s(cfg, "%[^\r\n]", &currentLine))
+        while(fgets(currentLine, 256, cfg))
         {
             ParsingApps[validLineCount] = SplitLineToAppPathPair((char *)&currentLine);
-            ++validLineCount;
+            validLineCount++;
         }
 
         fclose(cfg);
     }
     else
     {
-        printf_s("The config file was not found, please check the name : %s", configFile);
+        printf_s("\nThe config file was not found, please check the name : %s", configFile);
         fclose(cfg);
     }
 
@@ -85,11 +86,12 @@ CLArgsParser(char *arg, int validAppCount)
     }
     else
     {
-        for(int i = 0; i <= validAppCount; i++)
+        for(int i = 0; i < validAppCount; i++)
         {
-            if(arg == ParsingApps[i].application)
+            if(strcmp(arg, ParsingApps[i].application))
             {
-                printf("I FOUND A MATCH TO THE PASSED ARGUMENT IN THE CONFIG FILE");
+                printf("\nI FOUND A MATCH TO THE PASSED ARGUMENT IN THE CONFIG FILE\n");
+                printf("PATH -> %s", ParsingApps[i].path);
                 system(ParsingApps[i].path);
             }
         }

@@ -1,5 +1,6 @@
 // Launch.cpp is a command line utilitiy for launching Applications without
 // a .bat script from a config file
+// TODO: Write my own token parsing, and compare
 #include <cstdio>
 #include <string>
 #include <stdlib.h>
@@ -95,7 +96,12 @@ CLArgsParser(char *arg, int validAppCount)
             if(!strcmp(arg, ParsingApps[i].application))
             {
                 printf("\nPATH -> %s\n", ParsingApps[i].path);
-                system(ParsingApps[i].path);
+
+                char buffer[256];
+                strcpy(buffer, "call ");
+                strcat(buffer, ParsingApps[i].path);
+
+                system(buffer);
             }
         }
     }

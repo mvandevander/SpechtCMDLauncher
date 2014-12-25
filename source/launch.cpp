@@ -30,11 +30,13 @@ SplitLineToAppPathPair(char *str, char *delim = "=")
     // This also assumes there is only 2 parts a application name and a application path
     if(token)
     {
+        printf("\nDEBUG | Application -> %s\n", token);
         curProccessingApp.application = token;
 
         token = strtok_s(NULL, delim, &saveptr);
         if(token)
         {
+            printf("\nDEBUG | Path -> %s\n", token);
             curProccessingApp.path = token;
         }
     }
@@ -90,8 +92,7 @@ CLArgsParser(char *arg, int validAppCount)
         {
             if(strcmp(arg, ParsingApps[i].application))
             {
-                printf("\nI FOUND A MATCH TO THE PASSED ARGUMENT IN THE CONFIG FILE\n");
-                printf("PATH -> %s", ParsingApps[i].path);
+                printf("\nPATH -> %s\n", ParsingApps[i].path);
                 system(ParsingApps[i].path);
             }
         }

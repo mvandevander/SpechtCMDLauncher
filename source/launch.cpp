@@ -30,19 +30,19 @@ SplitLineToAppPathPair(char *str, char *delim = "=")
     // This also assumes there is only 2 parts a application name and a application path
     if(token)
     {
-        printf("\nDEBUG | Application -> %s\n", token);
+        printf("\nDEBUG | Application -> %s", token);
         curProccessingApp.application = token;
 
         token = strtok_s(NULL, delim, &saveptr);
         if(token)
         {
-            printf("\nDEBUG | Path -> %s\n", token);
+            printf("\nDEBUG | Path -> %s", token);
             curProccessingApp.path = token;
         }
     }
     else
     {
-        printf_s("Invalid Token: %s", token);
+        printf_s("\nInvalid Token: %s", token);
     }
     return curProccessingApp;
 }
@@ -82,15 +82,17 @@ CLConfigParser(char *configFile)
 internal void
 CLArgsParser(char *arg, int validAppCount)
 {
-    if(arg == "-h" || arg == "--help" || arg == "/?")
+    if(!strcmp(arg,"-h") || !strcmp(arg,"--help") || !strcmp(arg,"/?"))
     {
+        printf("\n%s\n", arg);
+        printf("THIS IS HELP\n");
         //TODO: Actually print some help for the end user
     }
     else
     {
         for(int i = 0; i < validAppCount; i++)
         {
-            if(strcmp(arg, ParsingApps[i].application))
+            if(!strcmp(arg, ParsingApps[i].application))
             {
                 printf("\nPATH -> %s\n", ParsingApps[i].path);
                 system(ParsingApps[i].path);
@@ -102,11 +104,18 @@ CLArgsParser(char *arg, int validAppCount)
 
 int main(int argc, char *argv[])
 {
-    int validApplicationCount = CLConfigParser("config.cfg");
-    if(validApplicationCount > 0)
+    if (argc  > 0)
     {
-        char *cmdArg = argv[1];
-        CLArgsParser(cmdArg, validApplicationCount);
+        int validApplicationCount = CLConfigParser("config.cfg");
+        if(validApplicationCount > 0)
+        {
+            char *cmdArg = argv[1];
+            CLArgsParser(cmdArg, validApplicationCount);
+        }
+    }
+    else
+    {
+        printf("\ninvalid argument count: must have 1 arg\n");
     }
 
     return 0;

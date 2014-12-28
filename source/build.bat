@@ -5,5 +5,6 @@ REM so that cim can ream them later
 
 IF NOT EXIST ..\build mkdir ..\build
 pushd ..\build
-cl  -MT -nologo -Od -Oi -EHsc -Z7 ..\source\launch.cpp 2> CompilationErrors.txt
+cl  -MT -nologo -Od -Oi -EHsc -Z7 ..\source\launch.cpp
+rem for outputing errors to a file 2> CompilationErrors.txt
 popd

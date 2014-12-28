@@ -16,7 +16,7 @@ int getStringLength(char *str)
 //NOTE(Dustin): You will have to free this memory if you use this function
 char* CopyString(char *strToCopy)
 {
-    char *result = (char*)mallac(getStringLength(strToCopy)+1);
+    char *result = (char*)malloc(getStringLength(strToCopy)+1);
 
     for (int i = 0; !strToCopy[i]; i++)
     {
@@ -37,19 +37,19 @@ void CopyString(char *strToCopy, char *placeToPutCopiedString)
 
 char* SplitString(char *inputString, char strDelim, char *savePlace)
 {
-    char *resultToken;
-    char tempParsingString[getStringLength(inputString)];
+    char *resultToken = "";
+    char *tempParsingString = (char*)malloc(getStringLength(inputString) +1);
     bool isParsingStringToDelim = true;
     int index = 0;
     int resultIndex = 0;
 
     if(inputString) // see if null so we know to use the savePlace as the start
     {
-        CopyString(inputString, (char*)tempparsingstring);
+        CopyString(inputString, tempParsingString);
     }
     else
     {
-        CopyString(savePlace), (char*)tempparsingstring;
+        CopyString(savePlace), tempParsingString;
     }
 
     while (isParsingStringToDelim)
@@ -65,7 +65,7 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
                 savePlace[i] = tempParsingString[index];
             }
         }
-        elseif(!tempParsingString[index])
+        else if(!tempParsingString[index])
         {
             resultToken[resultIndex] = tempParsingString[index];
 
@@ -78,5 +78,7 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
         }
 
     }
+    free(tempParsingString);
+
     return resultToken;
 }

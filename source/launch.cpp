@@ -1,9 +1,11 @@
 // Launch.cpp is a command line utilitiy for launching Applications without
 // a .bat script from a config file
 // TODO: Write my own token parsing, and compare
+
 #include <cstdio>
 #include <string>
 #include <stdlib.h>
+#include "SpechtStringLib.cpp"
 
 #define internal static
 #define local_persist static

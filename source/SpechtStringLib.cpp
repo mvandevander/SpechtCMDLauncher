@@ -13,6 +13,19 @@ int getStringLength(char *str)
     return resultLength;
 }
 
+int compareString(char *fString, char *sString) // first /second String
+{
+    for(int index = 0; index <= getStringLength(fString); index++)
+    {
+        if(fString[index] == sString[index])
+        { }
+        else
+        { return 0; }
+    }
+
+    return 1;
+}
+
 //NOTE(Dustin): You will have to free this memory if you use this function
 char* CopyString(char *strToCopy)
 {
@@ -49,7 +62,7 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
     }
     else
     {
-        CopyString(savePlace), tempParsingString;
+        CopyString(savePlace, tempParsingString);
     }
 
     while (isParsingStringToDelim)
@@ -78,6 +91,7 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
 
         for(int i = 0; i < resultIndex; i++)
         {
+            //resultToken is a pointer on the heap
             *(resultToken + i) = tempParsingString[i];
         }
 
@@ -87,7 +101,6 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
     else
     {
         free(tempParsingString);
-        return NULL; // This will be Null
+        return NULL;
     }
-
 }

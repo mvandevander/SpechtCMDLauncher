@@ -3,7 +3,6 @@
 // TODO: Write my own token parsing, and compare
 
 #include <cstdio>
-#include <string>
 #include <stdlib.h>
 #include "SpechtStringLib.cpp"
 
@@ -25,7 +24,9 @@ internal AppPathPair
 SplitLineToAppPathPair(char *str, char delim = '=')
 {
     AppPathPair curProccessingApp = {};
-    char *saveptr = ((char*)malloc(getStringLength(str)+1)); //just a place to save the rest of the line after the delim
+
+    //just a place to save the rest of the line after the delim
+    char *saveptr = ((char*)malloc(getStringLength(str)+1));
 
     char *tempStr = str;
     char *token = SplitString(tempStr, delim, saveptr);
@@ -107,10 +108,11 @@ CLArgsParser(char *arg, int validAppCount)
 
                 // String work to get everything in 1 string so system() can work
                 char buffer[256];
-                CopyString(buffer, "call ");
-                CopyString(buffer, ParsingApps[i].path);
+                //TODO: create catString
+                //catString(buffer, "call ");
+                //catString(buffer, ParsingApps[i].path);
 
-                system(buffer);
+                //system(buffer);
             }
         }
     }

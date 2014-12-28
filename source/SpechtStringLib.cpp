@@ -13,7 +13,8 @@ int getStringLength(char *str)
     return resultLength;
 }
 
-int compareString(char *fString, char *sString) // first /second String
+//TODO: make another compreString that is case insensitive
+int compareString(char *fString, char *sString) // first/second String
 {
     int firstStringLength = getStringLength(fString);
 
@@ -46,6 +47,19 @@ char* CopyString(char *strToCopy)
     return result;
 }
 
+// if the end user knows the length they can pass it instead of my getting it
+char* CopyString(char *strToCopy, int lengthOfStrToCopy)
+{
+    char *result = (char*)malloc(lengthOfStrToCopy+1);
+
+    for (int i = 0; !strToCopy[i]; i++)
+    {
+        result[i] = strToCopy[i];
+    }
+
+    return result;
+}
+
 //NOTE(Dustin): Overloaded function, the calle defines were the copy gets placed
 void CopyString(char *strToCopy, char *placeToPutCopiedString)
 {
@@ -55,6 +69,89 @@ void CopyString(char *strToCopy, char *placeToPutCopiedString)
     }
 }
 
+//NOTE(Dustin): Enduser needs to free the resultstring
+char* CatString(char *originString, char *strToCat)
+{
+    int originLength = getStringLength(originString);
+    int catStrLength = getStringLength(strToCat);
+    int catStrIndex = 0;
+
+    char *resultString = ((char*)malloc((originLength + catStrLength) + 1));
+
+    for(int index = 0; index <= (originLength + catStrLength); index++)
+    {
+        if(index <= originLength)
+        {
+            resultString[index] = originString[index];
+        }
+        else
+        {
+            if (index <= catStrLength)
+            {
+                resultString[index] = strToCat[catStrIndex];
+                catStrLength++;
+            }
+            else
+            {
+                // How did you get here
+            }
+        }
+    }
+
+    return resultString;
+}
+
+//Lets the enduser mangage the memory for the outputstring
+void CatString(char *originString, char *strToCat, char *outputString)
+{
+    int originLength = getStringLength(originString);
+    int catStrLength = getStringLength(strToCat);
+    int catStrIndex = 0;
+
+    for(int index = 0; index <= (originLength + catStrLength); index++)
+    {
+        if(index <= originLength)
+        {
+            outputString[index] = originString[index];
+        }
+        else
+        {
+            if (index <= catStrLength)
+            {
+                outputString[index] =strToCat[catStrIndex];
+                catStrLength++;
+            }
+            else
+            {
+                // How did you get here
+            }
+        }
+    }
+}
+
+//Lets the enduser pass in the lengths if he has them from something prior
+char* CatString(char *originString, int originLength, char *strToCat, int catStrLength)
+{
+    int catStrIndex = 0;
+    char *resultString = ((char*)malloc((originLength + catStrLength) + 1));
+
+    for(int index = 0; index <= (originLength + catStrLength); index++)
+    {
+        if(index <= originLength)
+        {
+            resultString[index] = originString[index];
+        }
+        if (index <= catStrLength)
+        {
+            resultString[index] = strToCat[catStrIndex];
+            catStrLength++;
+        }
+    }
+
+    return resultString;
+}
+
+//TODO: create a overload of this that lets user mangage all the mermory allocs
 char* SplitString(char *inputString, char strDelim, char *savePlace)
 {
     //char *resultToken = ((char*)malloc(getStringLength(inputString)+1));
@@ -109,5 +206,58 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
     {
         free(tempParsingString);
         return NULL;
+    }
+}
+
+void SplitString(char *inputString, char *outputString ,char strDelim, char *savePlace)
+{
+    //char *resultToken = ((char*)malloc(getStringLength(inputString)+1));
+    char *tempParsingString = ((char*)malloc(getStringLength(inputString)+1));
+    bool isParsingStringToDelim = true;
+    int index = 0;
+    int resultIndex = 0;
+
+    if(inputString) // see if null so we know to use the savePlace as the start
+    {
+        CopyString(inputString, tempParsingString);
+    }
+    else
+    {
+        CopyString(savePlace, tempParsingString);
+    }
+
+    while (isParsingStringToDelim)
+    {
+        //TODO: make this take multiple possible delim characters
+        if(tempParsingString[index] == strDelim)
+        {
+            isParsingStringToDelim = false;
+            index++;
+
+            for(int i = 0; tempParsingString[(index)]; i++)
+            {
+                savePlace[i] = tempParsingString[index];
+            }
+        }
+        else if(!tempParsingString[index])
+        {
+            resultIndex++;
+            index++;
+        }
+    }
+
+    if(resultIndex)
+    {
+
+        for(int i = 0; i < resultIndex; i++)
+        {
+            outputString[i] = tempParsingString[i];
+        }
+
+        free(tempParsingString);
+    }
+    else
+    {
+        free(tempParsingString);
     }
 }

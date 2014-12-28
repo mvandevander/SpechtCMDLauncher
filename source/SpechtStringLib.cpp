@@ -37,8 +37,8 @@ void CopyString(char *strToCopy, char *placeToPutCopiedString)
 
 char* SplitString(char *inputString, char strDelim, char *savePlace)
 {
-    char *resultToken = "";
-    char *tempParsingString = (char*)malloc(getStringLength(inputString) +1);
+    //char *resultToken = ((char*)malloc(getStringLength(inputString)+1));
+    char *tempParsingString = ((char*)malloc(getStringLength(inputString)+1));
     bool isParsingStringToDelim = true;
     int index = 0;
     int resultIndex = 0;
@@ -67,18 +67,27 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
         }
         else if(!tempParsingString[index])
         {
-            resultToken[resultIndex] = tempParsingString[index];
-
             resultIndex++;
             index++;
         }
-        else
+    }
+
+    if(resultIndex)
+    {
+        char *resultToken = ((char*)malloc(resultIndex+1));
+
+        for(int i = 0; i < resultIndex; i++)
         {
-            return inputString;
+            *(resultToken + i) = tempParsingString[i];
         }
 
+        free(tempParsingString);
+        return resultToken;
     }
-    free(tempParsingString);
+    else
+    {
+        free(tempParsingString);
+        return NULL; // This will be Null
+    }
 
-    return resultToken;
 }

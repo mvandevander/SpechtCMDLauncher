@@ -22,13 +22,13 @@ struct AppPathPair
 global_variable AppPathPair ParsingApps[100] = {};
 
 internal AppPathPair
-SplitLineToAppPathPair(char *str, char *delim = "=")
+SplitLineToAppPathPair(char *str, char delim = '=')
 {
     AppPathPair curProccessingApp = {};
-    char *saveptr; //just a place to save the rest of the line after the delim
+    char *saveptr = ((char*)malloc(getStringLength(str)+1)); //just a place to save the rest of the line after the delim
 
     char *tempStr = str;
-    char *token = strtok_s(tempStr, delim, &saveptr);
+    char *token = SplitString(tempStr, delim, saveptr);
 
     //TODO: Make this less janky
     // This also assumes there is only 2 parts a application name and a
@@ -38,17 +38,23 @@ SplitLineToAppPathPair(char *str, char *delim = "=")
         printf("\nDEBUG | Application -> %s", token);
         curProccessingApp.application = token;
 
-        token = strtok_s(NULL, delim, &saveptr);
+        free(token);
+
+        token = SplitString(NULL, delim, saveptr);
         if(token)
         {
             printf("\nDEBUG | Path -> %s", token);
             curProccessingApp.path = token;
+            free(token);
         }
     }
     else
     {
         printf_s("\nInvalid Token: %s", token);
+        free(token);
     }
+
+    free(saveptr);
     return curProccessingApp;
 }
 
@@ -85,7 +91,7 @@ CLConfigParser(char *configFile)
 internal void
 CLArgsParser(char *arg, int validAppCount)
 {
-    if(!strcmp(arg,"-h") || !strcmp(arg,"--help") || !strcmp(arg,"/?"))
+    if(compareString(arg,"-h") || compareString(arg,"--help") || compareString(arg,"/?"))
     {
         printf("\n%s\n", arg);
         printf("THIS IS HELP\n");
@@ -95,14 +101,14 @@ CLArgsParser(char *arg, int validAppCount)
     {
         for(int i = 0; i < validAppCount; i++)
         {
-            if(!strcmp(arg, ParsingApps[i].application))
+            if(compareString(arg, ParsingApps[i].application))
             {
                 //printf("\nPATH -> %s\n", ParsingApps[i].path);
 
                 // String work to get everything in 1 string so system() can work
                 char buffer[256];
-                strcpy(buffer, "call ");
-                strcat(buffer, ParsingApps[i].path);
+                CopyString(buffer, "call ");
+                CopyString(buffer, ParsingApps[i].path);
 
                 system(buffer);
             }

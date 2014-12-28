@@ -15,7 +15,14 @@ int getStringLength(char *str)
 
 int compareString(char *fString, char *sString) // first /second String
 {
-    for(int index = 0; index <= getStringLength(fString); index++)
+    int firstStringLength = getStringLength(fString);
+
+    if(firstStringLength != getStringLength(sString))
+    {
+        return 0;
+    }
+
+    for(int index = 0; index <= firstStringLength; index++)
     {
         if(fString[index] == sString[index])
         { }

@@ -5,12 +5,20 @@ int getStringLength(char *str)
     int resultLength = 0;
 
     // loop until you find the null ending term
-    for(int i = 0; !str[i]; i++)
+    for(int i = 0; str[i]; i++)
     {
         ++resultLength;
     }
-
     return resultLength;
+}
+
+void clearTempStringsToNull(char *str)
+{
+    int length = getStringLength(str);
+    for(int i = 0; i < length; i++)
+    {
+        str[i] = 0;
+    }
 }
 
 //TODO: make another compreString that is case insensitive
@@ -30,7 +38,6 @@ int compareString(char *fString, char *sString) // first/second String
         else
         { return 0; }
     }
-
     return 1;
 }
 
@@ -38,32 +45,32 @@ int compareString(char *fString, char *sString) // first/second String
 char* CopyString(char *strToCopy)
 {
     char *result = (char*)malloc(getStringLength(strToCopy)+1);
+    clearTempStringsToNull(result);
 
-    for (int i = 0; !strToCopy[i]; i++)
+    for (int i = 0; strToCopy[i]; i++)
     {
         result[i] = strToCopy[i];
     }
-
     return result;
 }
-
 // if the end user knows the length they can pass it instead of my getting it
+
 char* CopyString(char *strToCopy, int lengthOfStrToCopy)
 {
     char *result = (char*)malloc(lengthOfStrToCopy+1);
+    clearTempStringsToNull(result);
 
-    for (int i = 0; !strToCopy[i]; i++)
+    for (int i = 0; strToCopy[i]; i++)
     {
         result[i] = strToCopy[i];
     }
-
     return result;
 }
 
 //NOTE(Dustin): Overloaded function, the calle defines were the copy gets placed
 void CopyString(char *strToCopy, char *placeToPutCopiedString)
 {
-    for (int i = 0; !strToCopy[i]; i++)
+    for (int i = 0; strToCopy[i]; i++)
     {
         placeToPutCopiedString[i] = strToCopy[i];
     }
@@ -74,22 +81,24 @@ char* CatString(char *originString, char *strToCat)
 {
     int originLength = getStringLength(originString);
     int catStrLength = getStringLength(strToCat);
+    int outstringLength = (originLength + catStrLength);
     int catStrIndex = 0;
 
-    char *resultString = ((char*)malloc((originLength + catStrLength) + 1));
+    char *resultString = ((char*)malloc(outstringLength) + 1);
+    clearTempStringsToNull(resultString);
 
-    for(int index = 0; index <= (originLength + catStrLength); index++)
+    for(int index = 0; index < outstringLength; index++)
     {
-        if(index <= originLength)
+        if(index < originLength)
         {
             resultString[index] = originString[index];
         }
         else
         {
-            if (index <= catStrLength)
+            if (index < catStrLength)
             {
                 resultString[index] = strToCat[catStrIndex];
-                catStrLength++;
+                catStrIndex++;
             }
             else
             {
@@ -97,7 +106,6 @@ char* CatString(char *originString, char *strToCat)
             }
         }
     }
-
     return resultString;
 }
 
@@ -106,17 +114,18 @@ void CatString(char *originString, char *strToCat, char *outputString)
 {
     int originLength = getStringLength(originString);
     int catStrLength = getStringLength(strToCat);
+    int outstringLength = (originLength + catStrLength);
     int catStrIndex = 0;
 
-    for(int index = 0; index <= (originLength + catStrLength); index++)
+    for(int index = 0; index < outstringLength; index++)
     {
-        if(index <= originLength)
+        if(index < originLength)
         {
             outputString[index] = originString[index];
         }
         else
         {
-            if (index <= catStrLength)
+            if (index < catStrLength)
             {
                 outputString[index] =strToCat[catStrIndex];
                 catStrLength++;
@@ -134,6 +143,7 @@ char* CatString(char *originString, int originLength, char *strToCat, int catStr
 {
     int catStrIndex = 0;
     char *resultString = ((char*)malloc((originLength + catStrLength) + 1));
+    clearTempStringsToNull(resultString);
 
     for(int index = 0; index <= (originLength + catStrLength); index++)
     {
@@ -147,7 +157,6 @@ char* CatString(char *originString, int originLength, char *strToCat, int catStr
             catStrLength++;
         }
     }
-
     return resultString;
 }
 
@@ -156,6 +165,7 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
 {
     //char *resultToken = ((char*)malloc(getStringLength(inputString)+1));
     char *tempParsingString = ((char*)malloc(getStringLength(inputString)+1));
+    clearTempStringsToNull(tempParsingString);
     bool isParsingStringToDelim = true;
     int index = 0;
     int resultIndex = 0;
@@ -163,6 +173,7 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
     if(inputString) // see if null so we know to use the savePlace as the start
     {
         CopyString(inputString, tempParsingString);
+        clearTempStringsToNull(savePlace);
     }
     else
     {
@@ -180,9 +191,10 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
             for(int i = 0; tempParsingString[(index)]; i++)
             {
                 savePlace[i] = tempParsingString[index];
+                index++;
             }
         }
-        else if(!tempParsingString[index])
+        else if(tempParsingString[index])
         {
             resultIndex++;
             index++;
@@ -192,11 +204,12 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
     if(resultIndex)
     {
         char *resultToken = ((char*)malloc(resultIndex+1));
+        clearTempStringsToNull(resultToken);
 
         for(int i = 0; i < resultIndex; i++)
         {
             //resultToken is a pointer on the heap
-            *(resultToken + i) = tempParsingString[i];
+            resultToken[i] = tempParsingString[i];
         }
 
         free(tempParsingString);
@@ -213,6 +226,7 @@ void SplitString(char *inputString, char *outputString ,char strDelim, char *sav
 {
     //char *resultToken = ((char*)malloc(getStringLength(inputString)+1));
     char *tempParsingString = ((char*)malloc(getStringLength(inputString)+1));
+    clearTempStringsToNull(tempParsingString);
     bool isParsingStringToDelim = true;
     int index = 0;
     int resultIndex = 0;
@@ -237,9 +251,10 @@ void SplitString(char *inputString, char *outputString ,char strDelim, char *sav
             for(int i = 0; tempParsingString[(index)]; i++)
             {
                 savePlace[i] = tempParsingString[index];
+                index++;
             }
         }
-        else if(!tempParsingString[index])
+        else if(tempParsingString[index])
         {
             resultIndex++;
             index++;

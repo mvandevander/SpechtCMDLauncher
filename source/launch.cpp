@@ -41,11 +41,12 @@ SplitLineToAppPathPair(char *str, char delim = '=')
 
         free(token);
 
-        token = SplitString(NULL, delim, saveptr);
+        //token = SplitString(NULL, delim, saveptr);
         if(token)
         {
-            printf("\nDEBUG | Path -> %s", token);
-            curProccessingApp.path = token;
+            // temp until splitString is fixed to take null
+            printf("\nDEBUG | Path -> %s", saveptr);
+            curProccessingApp.path = saveptr;
             free(token);
         }
     }
@@ -67,11 +68,12 @@ CLConfigParser(char *configFile)
     // though when I debug the currentLine is only openTTD=\
 
     FILE *cfg = fopen(configFile, "r"); // open the config file read-only
-    char currentLine[256] = {};
-    int validLineCount = 0;
 
     if (cfg)
     {
+        char currentLine[256] = {};
+        int validLineCount = 0;
+
         while(fgets(currentLine, 256, cfg))
         {
             ParsingApps[validLineCount] = SplitLineToAppPathPair((char *)&currentLine);
@@ -79,14 +81,14 @@ CLConfigParser(char *configFile)
         }
 
         fclose(cfg);
+        return validLineCount;
     }
     else
     {
         printf_s("\nThe config file was not found, please check the name : %s", configFile);
         fclose(cfg);
+        return 0;
     }
-
-    return validLineCount;
 }
 
 internal void
@@ -107,12 +109,10 @@ CLArgsParser(char *arg, int validAppCount)
                 //printf("\nPATH -> %s\n", ParsingApps[i].path);
 
                 // String work to get everything in 1 string so system() can work
-                char buffer[256];
-                //TODO: create catString
-                //catString(buffer, "call ");
-                //catString(buffer, ParsingApps[i].path);
 
-                //system(buffer);
+                char *buffer = CatString("call ", ParsingApps[i].path);
+
+                system(buffer);
             }
         }
     }

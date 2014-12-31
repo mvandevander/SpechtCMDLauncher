@@ -36,26 +36,18 @@ SplitLineToAppPathPair(char *str, char delim = '=')
     // application path
     if(token)
     {
-        printf("\nDEBUG | Application -> %s", token);
-        curProccessingApp.application = token;
-
-        free(token);
-
-        //token = SplitString(NULL, delim, saveptr);
-        if(token)
-        {
-            // temp until splitString is fixed to take null
-            printf("\nDEBUG | Path -> %s", saveptr);
-            curProccessingApp.path = saveptr;
-            //free(token);
-        }
+        printf("\nDEBUG | Application -> %s\n", token);
+        curProccessingApp.application = CopyString(token);
+        
+        // temp until splitString is fixed to take null
+        printf("\nDEBUG | Path -> %s\n", saveptr);
+        curProccessingApp.path = CopyString(saveptr);
     }
     else
     {
-        printf_s("\nInvalid Token: %s", token);
-        free(token);
+        printf_s("\nInvalid Token: %s\n", token);
     }
-
+    free(token);
     free(saveptr);
     return curProccessingApp;
 }
@@ -111,7 +103,7 @@ CLArgsParser(char *arg, int validAppCount)
                 // String work to get everything in 1 string so system() can work
 
                 char *buffer = CatString("call ", ParsingApps[i].path);
-
+                printf("output: %s\n",buffer);
                 system(buffer);
             }
         }

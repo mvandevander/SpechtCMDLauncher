@@ -26,7 +26,7 @@ SplitLineToAppPathPair(char *str, char delim = '=')
     AppPathPair curProccessingApp = {};
 
     //just a place to save the rest of the line after the delim
-    char *saveptr = ((char*)malloc(getStringLength(str)+1));
+    char *saveptr = ((char*)calloc(getStringLength(str)+1, sizeof(char)));
 
     char *tempStr = str;
     char *token = SplitString(tempStr, delim, saveptr);
@@ -47,7 +47,7 @@ SplitLineToAppPathPair(char *str, char delim = '=')
             // temp until splitString is fixed to take null
             printf("\nDEBUG | Path -> %s", saveptr);
             curProccessingApp.path = saveptr;
-            free(token);
+            //free(token);
         }
     }
     else

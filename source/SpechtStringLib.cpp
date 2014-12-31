@@ -44,8 +44,8 @@ int compareString(char *fString, char *sString) // first/second String
 //NOTE(Dustin): You will have to free this memory if you use this function
 char* CopyString(char *strToCopy)
 {
-    char *result = (char*)malloc(getStringLength(strToCopy)+1);
-    clearTempStringsToNull(result);
+    char *result = (char*)calloc(getStringLength(strToCopy)+1, sizeof(char));
+    //clearTempStringsToNull(result);
 
     for (int i = 0; strToCopy[i]; i++)
     {
@@ -57,8 +57,8 @@ char* CopyString(char *strToCopy)
 
 char* CopyString(char *strToCopy, int lengthOfStrToCopy)
 {
-    char *result = (char*)malloc(lengthOfStrToCopy+1);
-    clearTempStringsToNull(result);
+    char *result = (char*)calloc(lengthOfStrToCopy+1,sizeof(char));
+    //clearTempStringsToNull(result);
 
     for (int i = 0; strToCopy[i]; i++)
     {
@@ -84,8 +84,8 @@ char* CatString(char *originString, char *strToCat)
     int outstringLength = (originLength + catStrLength);
     int catStrIndex = 0;
 
-    char *resultString = ((char*)malloc(outstringLength) + 1);
-    clearTempStringsToNull(resultString);
+    char *resultString = ((char*)calloc(outstringLength+1, sizeof(char)));
+    //clearTempStringsToNull(resultString);
 
     for(int index = 0; index < outstringLength; index++)
     {
@@ -142,8 +142,8 @@ void CatString(char *originString, char *strToCat, char *outputString)
 char* CatString(char *originString, int originLength, char *strToCat, int catStrLength)
 {
     int catStrIndex = 0;
-    char *resultString = ((char*)malloc((originLength + catStrLength) + 1));
-    clearTempStringsToNull(resultString);
+    char *resultString = ((char*)calloc((originLength + catStrLength) + 1, sizeof(char)));
+    //clearTempStringsToNull(resultString);
 
     for(int index = 0; index <= (originLength + catStrLength); index++)
     {
@@ -164,8 +164,8 @@ char* CatString(char *originString, int originLength, char *strToCat, int catStr
 char* SplitString(char *inputString, char strDelim, char *savePlace)
 {
     //char *resultToken = ((char*)malloc(getStringLength(inputString)+1));
-    char *tempParsingString = ((char*)malloc(getStringLength(inputString)+1));
-    clearTempStringsToNull(tempParsingString);
+    char *tempParsingString = ((char*)calloc(getStringLength(inputString)+1, sizeof(char)));
+    //clearTempStringsToNull(tempParsingString);
     bool isParsingStringToDelim = true;
     int index = 0;
     int resultIndex = 0;
@@ -203,8 +203,8 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
 
     if(resultIndex)
     {
-        char *resultToken = ((char*)malloc(resultIndex+1));
-        clearTempStringsToNull(resultToken);
+        char *resultToken = ((char*)calloc(resultIndex+1, sizeof(char)));
+        //clearTempStringsToNull(resultToken);
 
         for(int i = 0; i < resultIndex; i++)
         {
@@ -224,9 +224,9 @@ char* SplitString(char *inputString, char strDelim, char *savePlace)
 
 void SplitString(char *inputString, char *outputString ,char strDelim, char *savePlace)
 {
-    //char *resultToken = ((char*)malloc(getStringLength(inputString)+1));
-    char *tempParsingString = ((char*)malloc(getStringLength(inputString)+1));
-    clearTempStringsToNull(tempParsingString);
+    //char *resultToken = ((char*)calloc(getStringLength(inputString)+1));
+    char *tempParsingString = ((char*)calloc(getStringLength(inputString)+1, sizeof(char)));
+    //clearTempStringsToNull(tempParsingString);
     bool isParsingStringToDelim = true;
     int index = 0;
     int resultIndex = 0;

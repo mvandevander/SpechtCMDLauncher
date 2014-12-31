@@ -95,15 +95,8 @@ char* CatString(char *originString, char *strToCat)
         }
         else
         {
-            if (index < catStrLength)
-            {
                 resultString[index] = strToCat[catStrIndex];
                 catStrIndex++;
-            }
-            else
-            {
-                // How did you get here
-            }
         }
     }
     return resultString;
